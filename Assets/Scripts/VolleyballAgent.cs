@@ -10,6 +10,7 @@ public class VolleyballAgent : Agent
     Rigidbody agentRb;
     BehaviorParameters behaviorParameters;
     public VolleyballTeam teamId;
+    public bool isCoach;
 
     // To get ball's location for observations
     public GameObject ball;
@@ -192,33 +193,59 @@ public class VolleyballAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        // Agent rotation (2 floats)
-        float yRotRad = transform.eulerAngles.y * Mathf.Deg2Rad;
-        sensor.AddObservation(Mathf.Sin(yRotRad));
-        sensor.AddObservation(Mathf.Cos(yRotRad));
-        // Not linear like 0-359
+        if (isCoach) // Old modle with only 11 floats
+        {
+            // Agent rotation (2 floats)
+            sensor.AddObservation(this.transform.rotation.y);
 
-        // Vector from agent to ball (direction to ball) (3 floats)
-        Vector3 toBall = new Vector3((ballRb.transform.position.x - this.transform.position.x) * agentRot,
-        (ballRb.transform.position.y - this.transform.position.y),
-        (ballRb.transform.position.z - this.transform.position.z) * agentRot);
+            // Vector from agent to ball (direction to ball) (3 floats)
+            Vector3 toBall = new Vector3((ballRb.transform.position.x - this.transform.position.x) * agentRot,
+            (ballRb.transform.position.y - this.transform.position.y),
+            (ballRb.transform.position.z - this.transform.position.z) * agentRot);
 
-        sensor.AddObservation(toBall.normalized);
+            sensor.AddObservation(toBall.normalized);
 
-        // Distance from the ball (1 float)
-        sensor.AddObservation(toBall.magnitude);
+            // Distance from the ball (1 float)
+            sensor.AddObservation(toBall.magnitude);
 
-        // Agent Local Position (3 floats)
-        Vector3 agentPos = transform.localPosition;
-        sensor.AddObservation(agentPos);
+            // Agent velocity (3 floats)
+            sensor.AddObservation(agentRb.velocity);
 
-        // Agent velocity (3 floats)
-        sensor.AddObservation(agentRb.velocity);
+            // Ball velocity (3 floats)
+            sensor.AddObservation(ballRb.velocity.y);
+            sensor.AddObservation(ballRb.velocity.z * agentRot);
+            sensor.AddObservation(ballRb.velocity.x * agentRot);
+        }
+        else
+        {
+            // Agent rotation (2 floats)
+            float yRotRad = transform.eulerAngles.y * Mathf.Deg2Rad;
+            sensor.AddObservation(Mathf.Sin(yRotRad));
+            sensor.AddObservation(Mathf.Cos(yRotRad));
+            // Not linear like 0-359
 
-        // Ball velocity (3 floats)
-        sensor.AddObservation(ballRb.velocity.y);
-        sensor.AddObservation(ballRb.velocity.z * agentRot);
-        sensor.AddObservation(ballRb.velocity.x * agentRot);
+            // Vector from agent to ball (direction to ball) (3 floats)
+            Vector3 toBall = new Vector3((ballRb.transform.position.x - this.transform.position.x) * agentRot,
+            (ballRb.transform.position.y - this.transform.position.y),
+            (ballRb.transform.position.z - this.transform.position.z) * agentRot);
+
+            sensor.AddObservation(toBall.normalized);
+
+            // Distance from the ball (1 float)
+            sensor.AddObservation(toBall.magnitude);
+
+            // Agent Local Position (3 floats)
+            Vector3 agentPos = transform.localPosition;
+            sensor.AddObservation(agentPos);
+
+            // Agent velocity (3 floats)
+            sensor.AddObservation(agentRb.velocity);
+
+            // Ball velocity (3 floats)
+            sensor.AddObservation(ballRb.velocity.y);
+            sensor.AddObservation(ballRb.velocity.z * agentRot);
+            sensor.AddObservation(ballRb.velocity.x * agentRot);
+        }
     }
 
     // For human controller

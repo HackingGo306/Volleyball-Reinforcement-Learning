@@ -49,6 +49,9 @@ public class VolleyballEnvController : MonoBehaviour
 
     private int resetTimer;
     public int MaxEnvironmentSteps;
+    public int blueScore;
+    public int purpleScore;
+    public string prevGame;
 
     void Start()
     {
@@ -71,6 +74,9 @@ public class VolleyballEnvController : MonoBehaviour
 
         volleyballSettings = FindObjectOfType<VolleyballSettings>();
 
+        blueScore = 0;
+        purpleScore = 0;
+
         ResetScene();
     }
 
@@ -87,6 +93,17 @@ public class VolleyballEnvController : MonoBehaviour
     /// </summary>
     public void ResolveEvent(Event triggerEvent)
     {
+
+        if (blueScore >= 21 || purpleScore >= 21)
+        {
+            if (Mathf.Abs(blueScore - purpleScore) >= 2 || blueScore >= 30 || purpleScore >= 30) // Not deuce or 30 points
+            {
+                prevGame = "Blue: " + blueScore + " - Purple: " + purpleScore;
+                blueScore = 0;
+                purpleScore = 0;
+            }
+        }
+
         switch (triggerEvent)
         {
             case Event.HitOutOfBounds:
@@ -95,12 +112,14 @@ public class VolleyballEnvController : MonoBehaviour
                     // apply penalty to blue agent
                     blueAgent.AddReward(-0.3f);
                     StartCoroutine(GoalScoredSwapGroundMaterial(volleyballSettings.purpleGoalMaterial, RenderersList, .5f));
+                    purpleScore += 1;
                 }
                 else if (lastHitter == VolleyballTeam.Purple)
                 {
                     // apply penalty to purple agent
                     purpleAgent.AddReward(-0.3f);
                     StartCoroutine(GoalScoredSwapGroundMaterial(volleyballSettings.blueGoalMaterial, RenderersList, .5f));
+                    blueScore += 1;
                 }
 
                 // end episode
@@ -115,6 +134,7 @@ public class VolleyballEnvController : MonoBehaviour
                 blueAgent.AddReward(0.2f);
                 // turn floor blue
                 StartCoroutine(GoalScoredSwapGroundMaterial(volleyballSettings.blueGoalMaterial, RenderersList, .5f));
+                blueScore += 1;
 
                 // end episode
                 blueAgent.EndEpisode();
@@ -128,6 +148,7 @@ public class VolleyballEnvController : MonoBehaviour
                 purpleAgent.AddReward(0.2f);
                 // turn floor purple
                 StartCoroutine(GoalScoredSwapGroundMaterial(volleyballSettings.purpleGoalMaterial, RenderersList, .5f));
+                purpleScore += 1;
 
                 // end episode
                 blueAgent.EndEpisode();
