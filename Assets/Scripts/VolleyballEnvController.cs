@@ -130,8 +130,8 @@ public class VolleyballEnvController : MonoBehaviour
 
             case Event.HitBlueGoal:
                 // blue wins
-                purpleAgent.AddReward(-0.3f);
-                blueAgent.AddReward(0.2f);
+                purpleAgent.AddReward(-0.5f);
+                blueAgent.AddReward(0.1f);
                 // turn floor blue
                 StartCoroutine(GoalScoredSwapGroundMaterial(volleyballSettings.blueGoalMaterial, RenderersList, .5f));
                 blueScore += 1;
@@ -144,8 +144,8 @@ public class VolleyballEnvController : MonoBehaviour
 
             case Event.HitPurpleGoal:
                 // purple wins
-                blueAgent.AddReward(-0.3f);
-                purpleAgent.AddReward(0.2f);
+                blueAgent.AddReward(-0.5f);
+                purpleAgent.AddReward(0.1f);
                 // turn floor purple
                 StartCoroutine(GoalScoredSwapGroundMaterial(volleyballSettings.purpleGoalMaterial, RenderersList, .5f));
                 purpleScore += 1;
@@ -214,8 +214,6 @@ public class VolleyballEnvController : MonoBehaviour
     void FixedUpdate()
     {
         resetTimer += 1;
-        blueAgent.AddReward(0.01f);
-        purpleAgent.AddReward(0.01f);
         if (resetTimer >= MaxEnvironmentSteps && MaxEnvironmentSteps > 0)
         {
             blueAgent.EpisodeInterrupted();
