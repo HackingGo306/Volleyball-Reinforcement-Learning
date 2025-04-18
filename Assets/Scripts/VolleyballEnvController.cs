@@ -110,14 +110,14 @@ public class VolleyballEnvController : MonoBehaviour
                 if (lastHitter == VolleyballTeam.Blue)
                 {
                     // apply penalty to blue agent
-                    blueAgent.AddReward(-0.3f);
+                    blueAgent.AddReward(-0.7f);
                     StartCoroutine(GoalScoredSwapGroundMaterial(volleyballSettings.purpleGoalMaterial, RenderersList, .5f));
                     purpleScore += 1;
                 }
                 else if (lastHitter == VolleyballTeam.Purple)
                 {
                     // apply penalty to purple agent
-                    purpleAgent.AddReward(-0.3f);
+                    purpleAgent.AddReward(-0.7f);
                     StartCoroutine(GoalScoredSwapGroundMaterial(volleyballSettings.blueGoalMaterial, RenderersList, .5f));
                     blueScore += 1;
                 }
@@ -130,8 +130,8 @@ public class VolleyballEnvController : MonoBehaviour
 
             case Event.HitBlueGoal:
                 // blue wins
-                purpleAgent.AddReward(-0.5f);
-                blueAgent.AddReward(0.1f);
+                purpleAgent.AddReward(-1.0f);
+                blueAgent.AddReward(1.5f);
                 // turn floor blue
                 StartCoroutine(GoalScoredSwapGroundMaterial(volleyballSettings.blueGoalMaterial, RenderersList, .5f));
                 blueScore += 1;
@@ -144,8 +144,8 @@ public class VolleyballEnvController : MonoBehaviour
 
             case Event.HitPurpleGoal:
                 // purple wins
-                blueAgent.AddReward(-0.5f);
-                purpleAgent.AddReward(0.1f);
+                blueAgent.AddReward(-1.0f);
+                purpleAgent.AddReward(1.5f);
                 // turn floor purple
                 StartCoroutine(GoalScoredSwapGroundMaterial(volleyballSettings.purpleGoalMaterial, RenderersList, .5f));
                 purpleScore += 1;
@@ -159,14 +159,14 @@ public class VolleyballEnvController : MonoBehaviour
             case Event.HitIntoBlueArea:
                 if (lastHitter == VolleyballTeam.Purple)
                 {
-                    purpleAgent.AddReward(1);
+                    purpleAgent.AddReward(0.7f);
                 }
                 break;
 
             case Event.HitIntoPurpleArea:
                 if (lastHitter == VolleyballTeam.Blue)
                 {
-                    blueAgent.AddReward(1);
+                    blueAgent.AddReward(0.7f);
                 }
                 break;
 
